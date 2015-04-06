@@ -76,7 +76,7 @@ Triangles.prototype.buildData = function(x,y,options){
         ctx.drawImage(img,0,0,cvs.width,cvs.height);
     var canvasRunnerX        = 14,
         canvasRunnerY        = 0,
-        canvasColumnWidth    = cvs.width/columns,
+        canvasColumnWidth    = (cvs.width-14)/columns,
         canvasRowHeight      = cvs.height/fillY,
         triHeight            = canvasColumnWidth/2,
         triSide              = canvasRowHeight/1.5;
