@@ -53,8 +53,8 @@ function loadIMGFile() {
 
             fileDisplayArea.appendChild(img);
 
-            var t = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "50 50 700 250", side: 30});
-            var pattern = t.generate(700,400);
+            var t = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 1700 1200", side: 30});
+            var pattern = t.generate(1100,950);
 
             var jsonData = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pattern));
 
