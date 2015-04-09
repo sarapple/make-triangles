@@ -68,8 +68,13 @@ function loadIMGFile() {
         pattern = t.generate(700, 400);
         jsonData = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pattern));
 
-        $('<a href="data:' + jsonData + '" download="data.json">download JSON</a>').appendTo('#download');
-    }
+        var a = document.createElement("a");
+        a.href = 'data:' + jsonData;
+        a.download = "data.json";
+        a.textContent = "Download JSON!";
+        document.getElementById("download").appendChild(a);
+
+    };
     reader.readAsDataURL(file);
 
 };
