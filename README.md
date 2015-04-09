@@ -7,7 +7,8 @@ Inspired by @qrohlf Trianglify and template used.
 
 ```html
     <div class="triangle-wrapper"></div>
-    <script src="./make-triangles.js></script>
+    <script src="./directory-to/d3js.min.js></script>
+    <script src="./directory-to/make-triangles.js></script>
     <script>
         t = new Triangles({
                 viewBox: "0 0 700 400",
