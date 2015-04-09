@@ -2,7 +2,8 @@ document.getElementById('img-fileinput').addEventListener('change', loadIMGFile,
 document.getElementById('fileinput').addEventListener('change', loadJSONFile, false);
 
 function loadJSONFile() {
-    var input, file, fr;
+
+    var input, file, fr, lines;
 
     if (typeof window.FileReader !== 'function') {
         alert("The file API isn't supported on this browser yet.");
@@ -10,15 +11,10 @@ function loadJSONFile() {
     }
 
     input = document.getElementById('fileinput');
-    if (!input) {
-        alert("Um, couldn't find the fileinput element.");
-    }
-    else if (!input.files) {
-        alert("This browser doesn't seem to support the `files` property of file inputs.");
-    }
-    else if (!input.files[0]) {
-        alert("Please select a file before clicking 'Load'");
-    }
+
+    if (!input) { alert("Um, couldn't find the fileinput element."); }
+    else if (!input.files) { alert("This browser doesn't seem to support the `files` property of file inputs."); }
+    else if (!input.files[0]) { alert("Please select a file before clicking 'Load'"); }
     else {
         file = input.files[0];
         fr = new FileReader();
@@ -27,61 +23,68 @@ function loadJSONFile() {
     }
 
     function receivedText(e) {
+
         lines = e.target.result;
-        var jsArray = JSON.parse(lines);
-        //var up = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "50 50 700 250", side: 30});
-        //large triangle wall
-        var up = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 8424 7272", side: 252});
-        //var up = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 8424 7272", side: 252});
-        up.generateFromJSArray(700,400,jsArray);
+        console.log(lines);
+        var up = new Triangles({
+            transition: "rotate(150 -400,-400)",
+            viewBox: "50 50 700 250",
+            side: 30
+        });
+
+        up.generateFromJSArray(700,400, lines);
+
     }
+
 }
 
 function loadIMGFile() {
-    var fileInput = document.getElementById('img-fileinput');
-    var fileDisplayArea = document.getElementById('fileDisplayArea');
-    var file = fileInput.files[0];
-    var imageType = /image.*/;
 
-    if (file.type.match(imageType)) {
-        var reader = new FileReader();
+    var fileInput, fileDisplayArea, file;
 
-        reader.onload = function(e) {
-            fileDisplayArea.innerHTML = "";
+    fileInput = document.getElementById('img-fileinput');
+    fileDisplayArea = document.getElementById('fileDisplayArea');
+    file = fileInput.files[0];
 
-            // Create a new image.
-            var img = document.createElement('img');
-            img.src = reader.result;
-            img.id = "uploaded";
+    var reader = new FileReader();
 
-            fileDisplayArea.appendChild(img);
+    reader.onload = function(e) {
+        var img, t, pattern, jsonData;
+        fileDisplayArea.innerHTML = "";
 
-            var t = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 1700 1200", side: 30});
-            //large triangle wall
-            //var t = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 8424 7272", side: 252});
-            //var t = new Triangles({baseColor: "hsl(146,33%,25%)", transition: "rotate(150 -400,-400)", viewBox: "0 0 8424 10272", side: 252});
-            var pattern = t.generate(700,400);
+        // Create a new image.
+        img = document.createElement('img');
+        img.src = reader.result;
+        img.id = "uploaded";
 
-            var jsonData = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pattern));
+        fileDisplayArea.appendChild(img);
 
-            $('<a href="data:' + jsonData + '" download="data.json">download JSON</a>').appendTo('#download');
-        };
+        t = new Triangles({
+            transition: "rotate(10 -100,-100)",
+            viewBox: "0 0 1700 1200",
+            side: 30
+        });
 
-        reader.readAsDataURL(file);
-    } else {
-        fileDisplayArea.innerHTML = "File not supported!";
+        pattern = t.generate(700, 400);
+        jsonData = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(pattern));
+
+        $('<a href="data:' + jsonData + '" download="data.json">download JSON</a>').appendTo('#download');
     }
-}
+    reader.readAsDataURL(file);
+
+};
 
 exportSVG = function() {
-//get svg element.
-    var svg = document.getElementsByTagName("svg")[0];
-    console.log(svg);
-//get svg source.
-    var serializer = new XMLSerializer();
-    var source = serializer.serializeToString(svg);
 
-//add name spaces.
+    var svg, serializer, source,url;
+
+    //get svg element.
+    svg = document.getElementsByTagName("svg")[0];
+    //get svg source.
+    serializer = new XMLSerializer();
+    source = serializer.serializeToString(svg);
+
+    //add name spaces.
     if (!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
         source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
     }
@@ -89,16 +92,14 @@ exportSVG = function() {
         source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
     }
 
-//add xml declaration
+    //add xml declaration
     source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
 
-//convert svg source to URI data scheme.
-    var url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+    //convert svg source to URI data scheme.
+    url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
 
-//set url value to a element's href attribute.
+    //set url value to a element's href attribute.
     document.getElementById("link").href = url;
-//you can download svg file by right click menu.
-};
-exportJPG = function(){
-    window.open().location = document.getElementsByTagName("canvas")[0].toDataURL("image/png");
+    //you can download svg file by right click menu.
+
 };
