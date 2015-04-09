@@ -1,5 +1,5 @@
-.jpg
-.svg
-.png
-.json
+*.jpg
+*.svg
+*.png
+*.json
 .DS_Store
